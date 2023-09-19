@@ -5,9 +5,12 @@ services:
     image: redis
     ports:
       - 6379:6379
-  db:
-    container_name: postgres
-    image: postgres
+  postgres:
+    container_name: db
+    image: db
+    build:
+      context: ./
+      dockerfile: db.Dockerfile
     ports:
       - 5432:5432
     environment:

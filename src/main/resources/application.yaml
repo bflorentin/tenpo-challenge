@@ -1,6 +1,6 @@
 spring:
   r2dbc:
-    url: r2dbc:postgresql://db:5432/postgres
+    url: r2dbc:pool:postgresql://localhost:5432/tenpo
     username: postgres
     password: postgres
   data:
