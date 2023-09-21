@@ -2,6 +2,7 @@ package ar.com.florentin.tenpo.challenge.exception.handler;
 
 import ar.com.florentin.tenpo.challenge.exception.PercentageClientException;
 import ar.com.florentin.tenpo.challenge.exception.dto.ErrorResponseDto;
+import io.github.resilience4j.ratelimiter.RequestNotPermitted;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
@@ -50,5 +51,18 @@ public class RestExceptionHandler {
                 .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
                 .build();
         return ResponseEntity.internalServerError().body(errorResponseDto);
+    }
+    @ExceptionHandler(RequestNotPermitted.class)
+    public ResponseEntity<ErrorResponseDto> handleException(RequestNotPermitted e, ServerHttpRequest serverHttpRequest) {
+        log.error("TooManyRequests: {}",e.getMessage(), e);
+
+        final ErrorResponseDto errorResponseDto = ErrorResponseDto.builder()
+                .path(serverHttpRequest.getPath().value())
+                .errorMessage(e.getMessage())
+                .timestamp(LocalDateTime.now())
+                .httpStatus(HttpStatus.TOO_MANY_REQUESTS)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(errorResponseDto);
     }
 }

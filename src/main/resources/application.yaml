@@ -1,15 +1,15 @@
 spring:
   r2dbc:
-    url: r2dbc:pool:postgresql://localhost:5432/tenpo
+    url: r2dbc:pool:postgresql://${POSTGRES_HOST:postgres}:5432/tenpo
     username: postgres
     password: postgres
   data:
     redis:
-      host: localhost
+      host: ${REDIS_HOST:redis}
       port: 6379
       ttl: 30
   rabbitmq:
-    host: localhost
+    host: ${RABBIT_HOST:rabbitmq}
     port: 5672
     username: guest
     password: guest
@@ -18,10 +18,48 @@ spring:
 resilience4j:
   ratelimiter:
     instances:
-      calc:
+      sum:
         limitForPeriod: 3
         limitRefreshPeriod: 1m
+  retry:
+    retry-aspect-order: 2
+    instances:
+      percentageServiceRetry:
+        max-attempts: 3
+        wait-duration: 2s
+  circuitbreaker:
+    circuit-breaker-aspect-order: 1
+    instances:
+      percentageService:
+        slidingWindowSize: 3
+        slidingWindowType: COUNT_BASED
+        waitInterval: 10000
+        failureRateThreshold: 50
+        permittedNumberOfCallsInHalfOpenState: 3
+        registerHealthIndicator: true
+        allowHealthIndicatorToFail: true
+    configs:
+      default:
+        registerHealthIndicator: true
+
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoint:
+    health:
+      enabled: true
+      show-details: "ALWAYS"
+    metrics:
+      enabled: true
+  endpoints:
+    web:
+      expose: health,metrics
+      exposure:
+        include: "health,metrics"
 
 tenpo:
   percentage:
     uri: http://localhost:3001/percentage
+    mock:
+      enable: true

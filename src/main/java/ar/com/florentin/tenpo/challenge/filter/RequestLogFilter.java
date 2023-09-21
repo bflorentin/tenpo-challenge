@@ -10,6 +10,7 @@ import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Slf4j
 @Component
@@ -28,15 +29,19 @@ public class RequestLogFilter implements WebFilter {
 
         return webFilterChain.filter(serverWebExchange)
                 .doOnSuccess(unused -> {
-                    final RequestLogDto requestLogDto = RequestLogDto.builder()
-                            .path(path)
-                            .httpStatus(serverWebExchange.getResponse().getStatusCode().toString())
-                            .dateTime(LocalDateTime.now())
-                            .build();
+                    try {
+                        final RequestLogDto requestLogDto = RequestLogDto.builder()
+                                .path(path)
+                                .httpStatus(Objects.requireNonNull(serverWebExchange.getResponse().getStatusCode()).toString())
+                                .dateTime(LocalDateTime.now())
+                                .build();
 
-                    log.info("Record request: {}", requestLogDto);
+                        log.info("Record request: {}", requestLogDto);
 
-                    amqpService.sendMessage(requestLogDto).then();
+                        amqpService.sendMessage(requestLogDto).then();
+                    } catch (Exception e) {
+                        log.error("error queuing requestLog", e);
+                    }
                 });
     }
 }

@@ -29,14 +29,3 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-  tenpo-challenge:
-    container_name: tenpo-challenge
-    build:
-      context: ./
-      dockerfile: tenpoChalllenge.Dockerfile
-    ports:
-      - 8080:8080
-    depends_on:
-      - redis
-      - rabbitmq
-      - postgres

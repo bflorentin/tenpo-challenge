@@ -1,10 +1,16 @@
 package ar.com.florentin.tenpo.challenge.percentage.service.impl;
 
+import ar.com.florentin.tenpo.challenge.exception.PercentageClientException;
 import ar.com.florentin.tenpo.challenge.percentage.client.PercentageClient;
+import ar.com.florentin.tenpo.challenge.percentage.dto.PercentageResponseDto;
 import ar.com.florentin.tenpo.challenge.percentage.service.PercentageCacheService;
 import ar.com.florentin.tenpo.challenge.percentage.service.PercentageService;
 import ar.com.florentin.tenpo.challenge.util.MathOperations;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -13,6 +19,7 @@ import java.math.BigDecimal;
 @Slf4j
 @Service
 public class PercentageServiceImpl implements PercentageService {
+
     private final PercentageClient percentageClient;
     private final PercentageCacheService percentageCacheService;
 

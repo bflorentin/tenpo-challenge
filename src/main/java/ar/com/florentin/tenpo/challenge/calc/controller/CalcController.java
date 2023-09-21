@@ -20,7 +20,7 @@ public class CalcController {
         this.calcService = calcService;
     }
 
-    @RateLimiter(name = "calc")
+    @RateLimiter(name = "sum")
     @PostMapping("/sum")
     public Mono<BigDecimal> sum(@RequestBody @Valid OperationRequest request){
         return calcService.sum(request.getA(), request.getB());
