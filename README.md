@@ -30,7 +30,7 @@ Ejecutar solo infra (postgres, redis, rabbitmq):
 
 `docker-compose up`
 
-Agregar variables de entorno:
+Cambiar variables de entorno (solo para debbug):
 ```
 POSTGRES_HOST=localhost
 RABBIT_HOST=localhost
