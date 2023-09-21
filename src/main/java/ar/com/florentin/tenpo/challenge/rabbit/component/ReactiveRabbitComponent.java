@@ -1,4 +1,4 @@
-package ar.com.florentin.tenpo.challenge.rabbit;
+package ar.com.florentin.tenpo.challenge.rabbit.component;
 
 import ar.com.florentin.tenpo.challenge.config.property.RabbitProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,7 +27,6 @@ public class ReactiveRabbitComponent {
     public Mono<Boolean> sendMessage(Object message) {
         String json;
         try {
-
             // Serialize object to json
             json = objectMapper.writeValueAsString(message);
 
@@ -40,18 +39,16 @@ public class ReactiveRabbitComponent {
             // Declare the queue then send the flux of messages
             sender.declareQueue(QueueSpecification.queue(rabbitProperty.getQueueName()))
                     .thenMany(sender.sendWithPublishConfirms(outbound))
-                    .doOnError(e -> log.error("Send failed", e))
+                    .doOnError(e -> log.error("(AMQP) Send message failed", e))
                     .subscribe(m -> {
-                        log.info("Message has been sent...");
+                        log.info("(AMQP) Message has been sent...");
                     });
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("(AMQP) Send message failed", e);
         }
-
 
         // Return posted object to user (Client)
         return Mono.just(true);
-
     }
 }

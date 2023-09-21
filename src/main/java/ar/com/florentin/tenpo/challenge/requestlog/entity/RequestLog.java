@@ -17,8 +17,8 @@ public class RequestLog {
     private Long id;
     @Column("PATH")
     private String path;
-    @Column("JSON_RESPONSE")
-    private String jsonResponse;
+    @Column("HTTP_STATUS")
+    private String httpStatus;
     @Column("DATE_TIME")
     private LocalDateTime dateTime;
 }

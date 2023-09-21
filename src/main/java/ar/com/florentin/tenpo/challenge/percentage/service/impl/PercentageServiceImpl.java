@@ -33,6 +33,7 @@ public class PercentageServiceImpl implements PercentageService {
         log.info("Obtaining percentage from external service");
         return percentageClient.getPercentage()
                 .doOnNext(dto -> log.info("Percentage obtained - {}%", dto.getValue()))
-                .flatMap(dto -> this.percentageCacheService.save(dto.getValue()).doOnNext(p -> log.info("Cached percentage")));
+                .flatMap(dto -> this.percentageCacheService.save(dto.getValue())
+                        .doOnNext(p -> log.info("Cached percentage")));
     }
 }

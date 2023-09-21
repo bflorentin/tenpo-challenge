@@ -7,10 +7,21 @@ spring:
     redis:
       host: localhost
       port: 6379
-      ttl: 1
+      ttl: 30
   rabbitmq:
     host: localhost
     port: 5672
     username: guest
     password: guest
     queueName: requestLog
+
+resilience4j:
+  ratelimiter:
+    instances:
+      calc:
+        limitForPeriod: 3
+        limitRefreshPeriod: 1m
+
+tenpo:
+  percentage:
+    uri: http://localhost:3001/percentage

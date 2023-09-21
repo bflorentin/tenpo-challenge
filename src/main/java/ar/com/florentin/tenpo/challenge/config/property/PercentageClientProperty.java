@@ -6,9 +6,9 @@ import org.springframework.context.annotation.Configuration;
 
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "spring.data.redis")
-public class RedisConfigProperty {
-    private String host;
-    private Integer port;
-    private Long ttl = 10L;
+@ConfigurationProperties(
+        prefix = "tenpo.percentage"
+)
+public class PercentageClientProperty {
+    private String uri;
 }

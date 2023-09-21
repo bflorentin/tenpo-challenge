@@ -1,6 +1,6 @@
 package ar.com.florentin.tenpo.challenge.percentage.repository.impl;
 
-import ar.com.florentin.tenpo.challenge.redis.ReactiveRedisComponent;
+import ar.com.florentin.tenpo.challenge.redis.component.ReactiveRedisComponent;
 import ar.com.florentin.tenpo.challenge.percentage.entity.PercentageCache;
 import ar.com.florentin.tenpo.challenge.percentage.repository.PercentageCacheRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,11 +21,13 @@ public class PercentageCacheRepositoryImpl implements PercentageCacheRepository 
 
     @Override
     public Mono<PercentageCache> save(PercentageCache percentageCache) {
-        return reactiveRedisComponent.set(PERCENTAGE_CACHE_KEY,  percentageCache).map(p -> percentageCache);
+        return reactiveRedisComponent.set(PERCENTAGE_CACHE_KEY,  percentageCache)
+                .map(p -> percentageCache);
     }
 
     @Override
     public Mono<PercentageCache> get(String key) {
-        return reactiveRedisComponent.get(PERCENTAGE_CACHE_KEY).flatMap(p -> Mono.just(objectMapper.convertValue(p, PercentageCache.class)));
+        return reactiveRedisComponent.get(PERCENTAGE_CACHE_KEY)
+                .flatMap(p -> Mono.just(objectMapper.convertValue(p, PercentageCache.class)));
     }
 }

@@ -1,6 +1,7 @@
 package ar.com.florentin.tenpo.challenge.filter;
 
 import org.slf4j.MDC;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
@@ -13,10 +14,11 @@ import reactor.core.publisher.Mono;
 import java.util.UUID;
 
 import static ar.com.florentin.tenpo.challenge.util.Constants.X_REQUEST_ID;
+import static org.springframework.core.Ordered.HIGHEST_PRECEDENCE;
 
 @Component
+@Order(HIGHEST_PRECEDENCE)
 public class XRequestIdFilter implements WebFilter {
-
     @Override
     public Mono<Void> filter(ServerWebExchange serverWebExchange, WebFilterChain webFilterChain) {
         final String xRequestId = getXRequestId(serverWebExchange.getRequest());

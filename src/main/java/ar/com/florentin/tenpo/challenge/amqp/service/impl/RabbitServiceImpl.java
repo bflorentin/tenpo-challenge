@@ -1,7 +1,7 @@
 package ar.com.florentin.tenpo.challenge.amqp.service.impl;
 
 import ar.com.florentin.tenpo.challenge.amqp.service.AmqpService;
-import ar.com.florentin.tenpo.challenge.rabbit.ReactiveRabbitComponent;
+import ar.com.florentin.tenpo.challenge.rabbit.component.ReactiveRabbitComponent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;

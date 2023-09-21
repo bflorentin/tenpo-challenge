@@ -22,13 +22,21 @@ public class RequestLogFilter implements WebFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange serverWebExchange, WebFilterChain webFilterChain) {
-        final String path = serverWebExchange.getRequest().getPath().value();
-        final RequestLogDto requestLogDto = RequestLogDto.builder().path(path)
-                .jsonResponse("{json}")
-                .dateTime(LocalDateTime.now())
-                .build();
+        final String path = serverWebExchange.getRequest().getURI().toString();
 
-        return amqpService.sendMessage(requestLogDto)
-                .flatMap(aBoolean -> webFilterChain.filter(serverWebExchange));
+        log.info("Incoming Request: {} {}", serverWebExchange.getRequest().getMethod().name(), serverWebExchange.getRequest().getURI());
+
+        return webFilterChain.filter(serverWebExchange)
+                .doOnSuccess(unused -> {
+                    final RequestLogDto requestLogDto = RequestLogDto.builder()
+                            .path(path)
+                            .httpStatus(serverWebExchange.getResponse().getStatusCode().toString())
+                            .dateTime(LocalDateTime.now())
+                            .build();
+
+                    log.info("Record request: {}", requestLogDto);
+
+                    amqpService.sendMessage(requestLogDto).then();
+                });
     }
 }

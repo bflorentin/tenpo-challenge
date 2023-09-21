@@ -7,9 +7,10 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
+
 public class RequestLogDto {
     private Long id;
     private String path;
-    private String jsonResponse;
+    private String httpStatus;
     private LocalDateTime dateTime;
 }

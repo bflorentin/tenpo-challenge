@@ -23,13 +23,17 @@ public class PercentageCacheServiceImpl implements PercentageCacheService {
     @Override
     public Mono<BigDecimal> get() {
         log.info("Searching percentage in cache");
-        return percentageCacheRepository.get(PERCENTAGE_CACHE_KEY).map(PercentageCache::getLastValue);
+        return percentageCacheRepository.get(PERCENTAGE_CACHE_KEY)
+                .map(PercentageCache::getLastValue);
     }
 
     @Override
     public Mono<BigDecimal> save(BigDecimal value) {
         log.info("Saving percentage in cache");
-        final PercentageCache entity = PercentageCache.builder().lastValue(value).build();
-        return this.percentageCacheRepository.save(entity).map(PercentageCache::getLastValue);
+        final PercentageCache entity = PercentageCache.builder()
+                .lastValue(value)
+                .build();
+        return this.percentageCacheRepository.save(entity)
+                .map(PercentageCache::getLastValue);
     }
 }
