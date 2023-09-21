@@ -36,3 +36,7 @@ POSTGRES_HOST=localhost
 RABBIT_HOST=localhost
 REDIS_HOST=localhost
 ```
+
+### Guardado del historial de requests
+Para este requerimiento se decidió agregar un webfilter para capturar todos los request y al finalizar se deja en una queue (RabbitMQ).
+En este caso dentro del mismo microservicio se agrega un listener para tomar todos los request que lleguen a la queue de Rabbit y luego se procede al guardado en la base de datos.
